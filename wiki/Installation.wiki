@@ -1,5 +1,5 @@
-This page is under construction.
-이 페이지는 현재 작성중입니다.
+This page is under construction.\n
+이 페이지는 현재 작성중입니다.\n
 
 1. Using bundle USB memory. 기본 사양으로 포함된 USB 메모리를 이용하는 방법
 - 준비 과정 (Preparation)
