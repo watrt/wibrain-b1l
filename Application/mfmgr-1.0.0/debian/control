@@ -1,0 +1,11 @@
+Source: mfmgr
+Section: gnome
+Priority: optional
+Maintainer: wibrain linux Team <neal.kim@wibrain.com>
+Standards-Version: 1.0.0
+
+Package: mfmgr
+Architecture: any
+Section: gnome
+Depends: ${shlibs:Depends}
+Description: manager program for Wibrain B1
