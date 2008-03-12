@@ -1,0 +1,79 @@
+#!/bin/sh
+
+set +x
+
+ln -s /etc/init.d/getmfmgrcfg.sh /etc/rcS.d/S38mfmgr.sh
+
+XORG=/etc/X11/xorg.conf
+
+if [ -e ${XORG} ]
+then
+	
+	SECTIONOK=`grep Identifier ${XORG} | grep -c \"Synaptics\ Touchpad\"`
+	
+	if [ ${SECTIONOK} -ge 1 ]
+	then
+		
+		OPTIONOK=`grep Option ${XORG} | grep -c SHMConfig`
+		
+		if [ ${OPTIONOK} -ge 1 ]
+		then
+			ed ${XORG} << EOF
+/SHMConfig
+d
+i
+	Option		"SHMConfig"		"on"
+.
+w
+q
+EOF
+		else
+			ed ${XORG} << EOF
+/Driver.*"synaptics"
+/EndSection
+-
+a
+	Option		"SHMConfig"		"on"
+.
+w
+q
+EOF
+		fi
+	else
+		ed ${XORG} << EOF
+/EndSection
+
+a
+Section "InputDevice"
+	Identifier	"Synaptics Touchpad"
+	Driver		"synaptics"
+	Option		"SendCoreEvents"	"true"
+	Option		"Device"		"/dev/psaux"
+	Option		"Protocol"		"auto-dev"
+	Option		"HorizEdgeScroll"	"0"
+	Option		"SHMConfig"			"on"
+EndSection
+
+.
+w
+q
+EOF
+	fi
+
+	SERVERLAYOUTOK=`grep InputDevice ${XORG} | grep -c \"Synaptics\ Touchpad\"`
+
+	if [ ${SERVERLAYOUTOK} -eq 0 ]
+	then
+		ed ${XORG} << EOF
+/ServerLayout
+/EndSection
+i
+	InputDevice "Synaptics Touchpad"
+.
+w
+q
+EOF
+	fi
+else
+	echo "${XORG} File not found"
+fi

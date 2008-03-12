@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ -e /etc/rcS.d/S38mfmgr.sh ] 
+then
+	sudo rm -f /etc/rcS.d/S38mfmgr.sh
+else
+	echo 
+fi
