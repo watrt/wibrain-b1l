@@ -5,8 +5,6 @@ static unsigned char SilentMode[11] = {0x32, 0x01, 0x37, 0x01, 0x3B, 0x02, 0x3C,
 static unsigned char NormalMode[11] = {0x2D, 0x01, 0x32, 0x01, 0x37, 0x02, 0x38, 0x03, 0x0C, 0x0E, 0x10};
 static unsigned char CoooolMode[11] = {0x2D, 0x01, 0x32, 0x01, 0x37, 0x02, 0x38, 0x03, 0x0E, 0x14, 0x1A};
 
-#if 1
-
 #define TRY_MAX_NUM 100000L
 
 #include <asm/io.h>
@@ -222,84 +220,3 @@ void writeKeypad(mode)
 	}
    	RWconfig(200, mode, rwKeypad);
 }
-
-#else
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#define DEV_PORT "/dev/port"
-
-void checkInBufferFull()
-{
-	int fd = 0;
-	char c = 0;
-	volatile long i = TRY_MAX_NUM;
-
-	if((fd = open(DEV_PORT, O_RDWR)) == -1) {
-		perror("open()");
-		exit(1);
-	}
-
-	lseek(fd, 0x64, SEEK_SET);
-	
-	do {
-	   	read(fd, (void *)&c, 1);
-
-	} while(i-- && (c & 0x02));
-
-	close(fd);
-}
-
-void checkOutBufferFull()
-{
-	int fd = 0;
-	char c = 0;
-	volatile long i = TRY_MAX_NUM;
-
-	if((fd = open(DEV_PORT, O_RDWR)) == -1) {
-		perror("open()");
-		exit(1);
-	}
-
-	lseek(fd, 0x64, SEEK_SET);
-	
-	do {
-	   	read(fd, (void *)&c, 1);
-
-	} while(i-- && !(c & 0x01));
-
-	close(fd);
-}
-
-void readFanSpeed(unsigned char * uc)
-{
-	int fd = 0;
-	int i = 0;
-
-	if((fd = open(DEV_PORT, O_RDWR)) == -1) {
-		perror("open()");
-		exit(1);
-	}
-
-	for(i = 0; i < 4; i++) {
-	   	lseek(fd, 0x64, SEEK_SET);
-	   	write(fd, (void *)0xB9, 1);
-	
-		lseek(fd, 0x60, SEEK_SET);
-	   	write(fd, (void *)0xEC, 1);
-
-		lseek(fd, 0x60, SEEK_SET);
-	   	write(fd, (void *)0x2A + i, 1); 
-		
-		lseek(fd, 0x60, SEEK_SET);
-	   	read(fd, (void *)&uc[i], sizeof(uc)); 
-		
-		g_printf("0x%x\n", uc);
-	}
-
-	close(fd);
-}
-
-#endif
