@@ -1,4 +1,4 @@
-#summary 3D Compiz-Fusion 활성화하는 방법입니다.
+#summary 3D Compiz-Fusion 활성화 방법
 #labels Featured
 = Introduction =
 
