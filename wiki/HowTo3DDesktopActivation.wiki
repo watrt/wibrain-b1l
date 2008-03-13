@@ -1,3 +1,5 @@
+*summary: 3D Compiz-Fusion 활성화하는 방법입니다.
+
 = Introduction =
 
 이페이지는 B1L ubuntu 7.10 에서  3D Compiz-Fusion 활성화하는 방법입니다.
