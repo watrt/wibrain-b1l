@@ -1,5 +1,4 @@
-*summary: 3D Compiz-Fusion 활성화하는 방법입니다.
-
+#summary 3D Compiz-Fusion 활성화하는 방법입니다.
 = Introduction =
 
 이페이지는 B1L ubuntu 7.10 에서  3D Compiz-Fusion 활성화하는 방법입니다.
@@ -7,7 +6,7 @@
 
 = 적용 방법 =
  
-  *  /usr/bin/compiz 파일 vi 편집 
+  * /usr/bin/compiz 파일 vi 편집 
    `vi /usr/bin/compiz`  
   * compiz 파일안에 54 줄로 가서 White list에 *via* 추가하기 
 ----
