@@ -8,9 +8,11 @@
 = 적용 방법 =
  
   * /usr/bin/compiz 파일 vi 편집 
+
 {{{
 sudo vi /usr/bin/compiz
-}}} 
+}}}
+ 
   * compiz 파일안에 54 줄로 가서 White list에 *via* 추가하기 
 ----
 {{{  
