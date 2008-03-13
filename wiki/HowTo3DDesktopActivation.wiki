@@ -1,0 +1,16 @@
+= Introduction =
+
+이페이지는 B1L ubuntu 7.10 에서  3D Compiz-Fusion 활성화하는 방법입니다.
+
+
+= 적용 방법 =
+ 
+  *  /usr/bin/compiz 파일 vi 편집 
+   `vi /usr/bin/compiz`  
+  * compiz 파일안에 54 줄로 가서 White list에 *via* 추가하기 
+----
+{{{  
+54 WHITELIST="via nvida intel ati radeon i810"
+}}}
+----
+  * 시스템->관리->모양새->화면효과 설정을 *없음*에서 *보통*이나*Extra*등으로 변경한다.
