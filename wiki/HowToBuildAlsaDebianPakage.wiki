@@ -1,4 +1,5 @@
 #summary How to build ALSA debian package use to make-kpkg
+#labels Featured
 
 = Introduction =
 
