@@ -1,4 +1,4 @@
-#summary Mfmgr application build.
+#summary Mfmgr application build.(Mfmgr application 데비안 패키지 생성방법)
 #labels Featured
 
 = Mfmgr application 데비안 패키지 생성방법 =
