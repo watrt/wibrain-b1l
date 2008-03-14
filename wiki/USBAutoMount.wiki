@@ -1,4 +1,4 @@
-#summary USB auto Mount
+#summary auto-mount USB storage
 = Introduction =
 
 B1L 에 제공된 liveUSB 로 인스톨후, USB 저장장치를 연결했을 때 자동으로 마운트 안되는 경우
