@@ -9,6 +9,7 @@ B1L 에 제공된 liveUSB 로 인스톨후, USB 저장장치를 연결했을 때
 = Details =
 
   * vi 혹은 gedit 툴을 이용하여 /etc/fstab 를 불러들인 후, 아래 해당하는 줄을 삭제한 후 저장하시면 됩니다.
+
 {{{
 /dev/sda1        /media/cdrom0    udf,iso9660 user,noauto,exec 0     0
 }}}
