@@ -28,3 +28,6 @@ sudo vi /usr/bin/compiz
   # VT 전환을 2~3회 연속해서 하면, 시스템이 죽는 경우가 생긴다. 
   # 최대절전(Hibernation) 모드에서 돌아올때 화면에 아무것도 안나온다. 
 위 세가지 경우가 자신에게 심각한 문제라면, 3D Desktop 기능은 사용 불가 (현재 원인 및 대책 파악 중).
+
+추가로 Hyunwoo.Park님의 Issue Report에 의하면, 3D Desktop 30분~1시간 
+이상 사용시 화면 출력 기능이 머추는 문제 발생
