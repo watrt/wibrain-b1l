@@ -1,0 +1,13 @@
+#!/bin/sh
+
+KDIR=/lib/modules/`uname -r`
+
+cp -vf /tmp/vt6556/vntwusb.ko ${KDIR}/kernel/drivers/net/vntwusb.ko
+cp -vf /tmp/vt6556/wetctl /sbin/wetctl
+cp -vf /tmp/vt6556/sta.wlan /usr/local/bin/sta.wlan
+
+rm -rf /tmp/vt6556
+
+depmod -a
+
+

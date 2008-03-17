@@ -1,0 +1,18 @@
+Source: vx700
+Section: Video Card
+Priority: optional
+Maintainer: Jerry Shen <Jerry Shen@via.com.tw>
+Uploaders: charles park <charles.jkpark@hotmail.com>
+Build-Depends: debhelper (>> 4.0.0), linux-headers-_KVERS_
+Standards-Version: 3.6.2
+
+Package: vx700-modules-_KVERS_
+Architecture: any
+Provides: vx700-modules
+Depends: linux-modules-_KVERS_ | linux-image-_KVERS_
+Description: 
+ This driver supports the via vx700
+ .
+ This package contains the compiled kernel module for _KVERS_
+ .
+

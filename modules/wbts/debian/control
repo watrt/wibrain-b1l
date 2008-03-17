@@ -1,0 +1,18 @@
+Source: wbts
+Section: touchscreen
+Priority: optional
+Maintainer: charles park <charles.jkpark@hotmail.com>
+Uploaders: charles park <charles.jkpark@hotmail.com>
+Build-Depends: debhelper (>> 4.0.0), linux-headers-2.6.22-14-generic
+Standards-Version: 3.6.2
+
+Package: wbts-modules-2.6.22-14-generic
+Architecture: any
+Provides: wbts-modules
+Depends: linux-modules-2.6.22-14-generic | linux-image-2.6.22-14-generic
+Description: 
+ This driver supports the Techdine R4510SP touchscreen
+ .
+ This package contains the compiled kernel module for 2.6.22-14-generic
+ .
+

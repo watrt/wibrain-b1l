@@ -1,0 +1,18 @@
+Source: vt6556
+Section: Wireless Lan
+Priority: optional
+Maintainer: Jerry Shen <Jerry Shen@via.com.tw>
+Uploaders: charles park <charles.jkpark@hotmail.com>
+Build-Depends: debhelper (>> 4.0.0), linux-headers-2.6.22-14-generic
+Standards-Version: 3.6.2
+
+Package: vt6556-modules-2.6.22-14-generic
+Architecture: any
+Provides: vt6556-modules
+Depends: linux-modules-2.6.22-14-generic | linux-image-2.6.22-14-generic
+Description: 
+ This driver supports the via vt6556
+ .
+ This package contains the compiled kernel module for 2.6.22-14-generic
+ .
+

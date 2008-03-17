@@ -1,0 +1,7 @@
+vt6556 (1.0-0) unstable; urgency=low
+
+  * VIA vx6556 module support.
+
+  * Initial release.
+
+ -- Jerry Shen <JerryShen@via.com.tw>  Thu,  14 Feb 2008 14:28:30 +0200

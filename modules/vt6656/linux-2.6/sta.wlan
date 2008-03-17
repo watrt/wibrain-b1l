@@ -1,0 +1,85 @@
+#! /bin/sh
+# VIA Networking Wireless LAN USB device network setup script
+#   
+###################### Wireless Settings ######################################
+
+# Assigned available device interface such as eth0 or eth1.
+
+DEVICE=eth0
+
+# wireless settings
+
+DESIRED_SSID=""            	    # ["xxx"] Service Set ID for used(Max 32)
+BSSTYPE=infra	                    # [adhoc|infra] adhoc or infrastructure mode
+CHANNEL=6                           # [1..14] default startup channel
+PSMODE=no                           # [yes|no] to enable power saving
+AUTHTYPE=open                       # [open|share] authentication mode
+
+
+# WEP function enable/disable
+
+WEP_ENABLE=no                        # [yes|no] to enable WEP 
+WEP_DEFKEY=0                         # [0..3] Key Index for use
+
+
+# WEP HEX key settings, only WEP_ENABLE=yes, key will take effect. 
+# [no|"xx:xx:xx:xx:xx"]: no key or 40bit(10-hex)/104(26-hex)wep hex key
+
+WEP_KEY0="11:22:33:44:55:66:77:88:99:aa:bb:cc:dd"       # 104 bit wep key
+WEP_KEY1=no
+WEP_KEY2=no
+WEP_KEY3=no
+
+###################### Settings End ###########################################
+#
+# Don't modify the following setup script ! 
+# The following script use "Wireless Settings" to configure wirless network.
+#
+###################### Script Begin ###########################################
+
+
+cnt=`/sbin/lsmod | grep -c vntwusb`
+if [ "$cnt" = "0" ]; then
+  echo "insmod 'vntwusb'"  
+  /sbin/insmod vntwusb.o
+fi
+
+# Open device
+/sbin/ifconfig $DEVICE up
+
+if [ "$DESIRED_SSID" = "" ] ; then
+  DESIRED_SSID="any"
+fi
+
+# Set your wep keys, if present
+
+if [ "$WEP_ENABLE" = "yes" ] ; then
+/sbin/wetctl $DEVICE privacy \
+		$WEP_DEFKEY \
+		key0 $WEP_KEY0 \
+		key1 $WEP_KEY1 \
+		key2 $WEP_KEY2 \
+		key3 $WEP_KEY3
+else 
+/sbin/wetctl $DEVICE privacy off
+fi	
+		
+# Scan for existing networks
+echo "Scanning channels" 
+/sbin/wetctl $DEVICE scan
+
+# Join for existing networks
+/sbin/wetctl $DEVICE join \
+		$BSSTYPE \
+	 	$DESIRED_SSID \
+	 	$CHANNEL \
+		$PSMODE \
+		$AUTHTYPE
+		
+echo "Joining with " \
+	 "Desired SSID=$DESIRED_SSID," \
+	 "Network Type=$BSSTYPE" 	 
+
+
+exit 0
+###################### Script End #############################################

@@ -1,0 +1,25 @@
+Source: wbts
+Section: touchscreen
+Priority: optional
+Maintainer: Rick Koch <n1gp@hotmail.com>
+Uploaders: charles park <charles.jkpark@hotmail.com>
+Build-Depends: debhelper (>> 4.0.0), linux-headers-2.6.22.9
+Standards-Version: 3.6.2
+
+Package: wbts-modules-2.6.22.9
+Architecture: any
+Provides: wbts-modules
+Depends: linux-modules-2.6.22.9 | linux-image-2.6.22.9
+Description: Squash filesystem support for Debian Linux kernels
+ Squashfs is a highly compressed read-only filesystem for Linux. It uses zlib
+ compression to compress both files, inodes and directories. Inodes in the
+ system are very small and all blocks are packed to minimise data overhead.
+ Block sizes greater than 4K are supported up to a maximum of 64K.
+ .
+ Squashfs is intended for general read-only filesystem use, for archival use
+ (e.g. in cases where a .tar.gz file may be used), and in constrained block
+ device/memory systems (e.g. embedded systems) where low overhead is needed.
+ .
+ This package contains the compiled kernel module for 2.6.22.9
+ .
+  Homepage: http://squashfs.sourceforge.net/

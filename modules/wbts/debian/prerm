@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ -e /etc/rcS.d/S39touch_init.sh ] 
+then
+	rm -f /etc/rcS.d/S39touch_init.sh
+else
+	echo 
+fi
