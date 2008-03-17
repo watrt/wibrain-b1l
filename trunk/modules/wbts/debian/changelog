@@ -1,0 +1,13 @@
+wbts (1.0-0) unstable; urgency=low
+
+  * Added evtouch_drv.o (Touchscreen driver for X window)
+
+  * Update calibrator program
+
+  * Update proc filesystem and added read proc (IICR read in ec controller) (/proc/ec_iicr)
+
+  * Implement proc filesystem (/proc/touchscreen)
+
+  * Initial release.
+
+ -- charles park <charles.jkpark@hotmail.com>  Wed,  11 Feb 2008 14:28:30 +0200

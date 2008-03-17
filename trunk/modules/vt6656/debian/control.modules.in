@@ -1,0 +1,18 @@
+Source: vt6556
+Section: Wireless Lan
+Priority: optional
+Maintainer: Jerry Shen <Jerry Shen@via.com.tw>
+Uploaders: charles park <charles.jkpark@hotmail.com>
+Build-Depends: debhelper (>> 4.0.0), linux-headers-_KVERS_
+Standards-Version: 3.6.2
+
+Package: vt6556-modules-_KVERS_
+Architecture: any
+Provides: vt6556-modules
+Depends: linux-modules-_KVERS_ | linux-image-_KVERS_
+Description: 
+ This driver supports the via vt6556
+ .
+ This package contains the compiled kernel module for _KVERS_
+ .
+

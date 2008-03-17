@@ -1,0 +1,78 @@
+#!/bin/sh
+
+XORG=/etc/X11/xorg.conf
+
+cp -vf /tmp/evtouch/evtouch_drv.so /usr/lib/xorg/modules/input/
+cp -vf /tmp/evtouch/calibrator /usr/local/bin/
+cp -vf /tmp/evtouch/xorgApd.sh /usr/local/bin/
+cp -vf /tmp/evtouch/touch_init.sh /etc/init.d/
+rm -rf /tmp/evtouch
+
+depmod -a
+ln -s /etc/init.d/touch_init.sh /etc/rcS.d/S39touch_init.sh
+
+if [ -e ${XORG} ]
+then
+	SECTIONOK=`grep Identifier ${XORG} | grep -c \"touchscreen\"`
+	if [ ${SECTIONOK} -ge 1 ]
+	then
+		ed ${XORG} << EOF
+/touchscreen
+-
+.,/EndSection/d
+w
+q
+EOF
+	fi
+	
+	SERVERLAYOUTOK=`grep InputDevice ${XORG} | grep -c \"touchscreen\"`
+
+	if [ ${SERVERLAYOUTOK} -ge 1 ]
+	then
+		ed ${XORG} << EOF
+/ServerLayout
+/touchscreen
+d
+w
+q
+EOF
+	fi
+
+	ed ${XORG} << EOF
+/EndSection
+
+a
+Section "InputDevice"
+	Identifier	"touchscreen"
+	Driver		"evtouch"
+	Option		"Device"		"/dev/input/touchscreen"
+	Option		"ReportingMode"		"Raw"
+	Option		"SendCoreEvents"	"true"
+	Option		"Emulate3Buttons"
+	Option		"Emulate3Timeout"	"50"
+	Option		"LongTouchTimer"	"200"
+	Option		"MinX"			"40"
+	Option		"MinY"			"90"
+	Option		"MaxX"			"990"
+	Option		"MaxY"			"967"
+#	Option		"TapTimer"		"200"
+#	Option		"MoveLimit"		"30"
+#	Option		"Rotate"		"CW"
+#	Option		"SwapX"			"false"
+#	Option		"SwapY"			"false"
+EndSection
+.
+/ServerLayout
+/EndSection
+-
+a
+	InputDevice	"touchscreen"	"CorePointer"
+.
+w
+q
+EOF
+
+else
+	echo "${XORG} File not found"
+fi
+

@@ -1,0 +1,75 @@
+#This .VIAVIDEORC is for CN400/PMN800
+# Weave=0, Bob=1, Median=2
+# CLE266 only support bob & weave de-interlace, bob is default
+# CN400/PMN800 support bob, weave & median de-interlace, median is default
+#CAP0_DEINTERLACE:2
+#CAP1_DEINTERLACE:2
+CAP0_FIELDSWAP:1  
+NOCAP0_HFILTER 
+NOCAP1_HFILTER 
+CAPTURE_OVERSCANOFF 
+HQVFILTER_MANUALSELECT 
+MPEG_HQV_VFILTER_MODE:0
+MPEG_HQV_HFILTER_MODE:0
+CAP_HQV_VFILTER_MODE:0
+CAP_HQV_HFILTER_MODE:0
+SETMPEG_FBNUMBER 
+CAP1_USEIRQ 
+# CAP0_SWITCHTOV3  Only for Samsung
+CAP0_SWITCHTOV3 
+HQV_MANUALSWITCH 
+CapInterVersion 
+#Cap0NoAutoDetect:1 
+Cap0DataWidth:8
+#SAA7113H=1, SAA7108H=2, SAA7114=3
+#Cap0VDODecoderDev:1
+#Cap0VDODecoderI2C:72
+Cap0CompositeMode:2
+Cap0SVideoMode:7
+Cap0TunerMode:0
+Cap0Scaler:0
+# 0-255
+Cap0Brightness:128
+# 0-255
+Cap0Contrast:71
+# 0-255
+Cap0Hue:0
+# 0-255
+Cap0Saturation:64
+# PAL=0, NTSC=1, SECAM=2
+Cap0Standard:1
+#FI1236MK2=1
+Cap0TunerDev:1
+Cap0TunerI2C:198
+Cap0SourceWidth 
+Cap0SourceHeight 
+#Cap1NoAutoDetect:1
+Cap1DataWidth:8
+#SAA7113H=1, SAA7108H=2, SAA7114=3
+#Cap1VDODecoderDev:3
+#Cap1VDODecoderI2C:64
+Cap1CompositeMode:2
+Cap1SVideoMode:7
+Cap1TunerMode:0
+Cap1Scaler:0 
+Cap1Brightness:128
+Cap1Contrast:71
+Cap1Hue:0
+Cap1Saturation:64
+# PAL=0, NTSC=1, SECAM=2
+Cap1Standard:1
+#FI1236MK2=1
+Cap1TunerDev:1
+Cap1TunerI2C:192
+Cap1SourceWidth 
+Cap1SourceHeight 
+NOMPEGAddOneLineOnBottom 
+ReDrawColorkey
+#De-Blocking enable=1
+DeBlocking:0 
+DeBlockingMinimumWidth:320
+DeBlockingMinimumHeight:240
+3to2PullDownDisable:0
+Use2DBitBltSignature:1
+
+

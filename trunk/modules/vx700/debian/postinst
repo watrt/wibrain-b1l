@@ -1,0 +1,12 @@
+#!/bin/sh
+
+KDIR=/lib/modules/`uname -r`
+
+modprobe via -r
+mv ${KDIR}/kernel/drivers/char/drm/via.ko ${KDIR}/kernel/drivers/char/drm/via.ko.orig
+cp -vf /tmp/vx700/libddmpeg.so /usr/lib/
+cp -vf /tmp/vx700/.VIAVIDEORC /root/
+cp -vf /tmp/vx700/via_drv.so /usr/lib/xorg/modules/drivers/
+
+rm -rf /tmp/vx700
+
