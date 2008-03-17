@@ -1,4 +1,5 @@
-#summary 터미널프로그램을 통하여 무선랜을 수동으로 설정 하는 방법
+#summary 터미널 프로그램을 통하여 무선랜을 수동으로 설정 하는 방법
+#labels Phase-Deploy,Featured
 
 = 무선랜 수동 설정 방법 =
 
