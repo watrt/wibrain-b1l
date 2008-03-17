@@ -28,4 +28,4 @@ sudo ifconfig eth0 up
 route
 }}}
 
- * default Gateway 설정이 나온다면 정상적으로 설정되었는지 Explore를 실행하여 확인한다.
+ * default Gateway 설정이 나온다면 정상적으로 설정되었는지 Firefox(웹브라우져)를 실행하여 확인한다.
