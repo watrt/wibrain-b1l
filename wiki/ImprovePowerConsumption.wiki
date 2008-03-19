@@ -65,11 +65,12 @@ sudo make-kpkg --append-to-version=test kernel_image --initrd binary
 sudo dpkg -i [생성된 커널 이미지 데비안 패키지]
 sudo dpkg -i [생성된 커널 해더 데비안 패키지]
 
-// 설치 완료 후 아래와 같은 명령으로 커널을 업데이트 합니다.
-sudo update-initramfs -u initrd update
-
 // 정상적으로 설정되었는지 아래 파일을 열어 업데이트 되어진 커널을 확인합니다.
 sudo gedit /boot/grub/menu.list
+
+// 재시작하여 아래의 명령으로 커널버젼을 확인하여 새로운 커널이 정상적으로 적용되었는지 확인합니다.
+uname -r
+
 }}}
 
 == 커널이 정상적으로 부팅되지 않는 경우 ==
