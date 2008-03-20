@@ -85,6 +85,6 @@ uname -r
  * 기존에 사용하던 generic kernel을 선택하여 정상적으로 부팅시킬 수 있습니다.
 
 == 알려진 문제점 ==
- * PowerSaver적용시 B1L의 Camera가 활성화 되지 않습니다.
+ * PowerSaver 적용시 B1L의 Camera가 활성화 되지 않습니다.
  * Ubuntu에서 제공하는 debian package를 사용하지 못하는 경우가 발생합니다.
  * 무선랜 드라이버/오디오 드라이버/터치 스크린 드라이버 등은 새로운 커널에서 새로 Build하여 적용하여야 합니다.
