@@ -14,6 +14,8 @@
 #include <linux/ioport.h>
 #include <linux/interrupt.h>
 #include <linux/input.h>
+#include <linux/platform_device.h>
+#include <linux/device.h>
 
 #include <linux/stat.h>
 #include <linux/proc_fs.h>
@@ -49,7 +51,7 @@ MODULE_LICENSE("Dual BSD/GPL");
 //	BIT3		1 = Command(HOST->EC), 0 = Data(EC->HOST)
 //
 //----------------------------------------------------------------------------------------------------------------
-#define	DEBUG_MSG			0
+#define	DEBUG_MSG			1
 
 #define	TRUE				1
 #define	FALSE				0
@@ -110,11 +112,19 @@ static	int			read_period_data_proc	(char *page, char **start, off_t off, int cou
 static	int			write_period_data_proc	(struct file *file, const char __user *buffer, unsigned long count, void *data);
 static	int 		init_proc_filesystem	(void);
 
-static void 		wbts_interrupt	(unsigned long arg);
-static int 			wbts_open		(struct input_dev *dev);
-static void 		wbts_close		(struct input_dev *dev);
-static int __init 	wbts_init		(void);
-static void __exit 	wbts_exit		(void);
+static void 		wbts_interrupt			(unsigned long arg);
+static int 			wbts_open				(struct input_dev *dev);
+static void 		wbts_close				(struct input_dev *dev);
+
+static void 		wbts_release_device		(struct device *dev);
+static int 			wbts_resume				(struct device *dev);
+static int 			wbts_suspend			(struct device *dev, pm_message_t state);
+
+static int __devinit 	wbts_probe			(struct device *pdev);
+static int __devexit 	wbts_remove			(struct device *pdev);
+
+static int __init 		wbts_init			(void);
+static void __exit 		wbts_exit			(void);
 
 //----------------------------------------------------------------------------------------------------------------
 // Module param define
@@ -126,6 +136,28 @@ MODULE_PARM_DESC(io, "I/O base address of EC Controler(TECHDIEN Touchscreen)");
 static	unsigned int	wbts_irq = EC_0x3E0_CTRL_IRQ;
 module_param_named(irq, wbts_irq, uint, 0);
 MODULE_PARM_DESC(irq, "IRQ of EC Controller(TECHDIEN Touchscreen)");
+
+//----------------------------------------------------------------------------------------------------------------
+// platform device driver init
+//----------------------------------------------------------------------------------------------------------------
+struct platform_device wbts_platform_device_driver = {
+	.name			= "wbts",
+	.id				= 0,
+	.num_resources	= 0,
+	.dev	= {
+		.release	= wbts_release_device,
+	},
+};
+
+struct device_driver wbts_device_driver = {
+	.owner		= THIS_MODULE,
+	.name		= "wbts",
+	.bus		= &platform_bus_type,
+	.probe		= wbts_probe,
+	.remove		= __devexit_p(wbts_remove),
+	.suspend	= wbts_suspend,
+	.resume		= wbts_resume,
+};
 
 //----------------------------------------------------------------------------------------------------------------
 // Module define
@@ -168,6 +200,7 @@ static	int		sync_y = 0;
 static	unsigned int	read_iicr_count = 0;
 static	unsigned char	read_iicr = 0;
 
+static	unsigned char	bSuspend = FALSE;
 //----------------------------------------------------------------------------------------------------------------
 static	int	in_buffer_empty_check(void)
 {
@@ -480,7 +513,8 @@ static	void 		wbts_interrupt(unsigned long arg)
 		}
 	#endif
 	
-	add_timer(data);
+	if(!bSuspend)		add_timer(data);
+
 	spin_unlock(&wbts_lock);
 }
 
@@ -501,9 +535,8 @@ static int wbts_open(struct input_dev *dev)
 
 	#if	(DEBUG_MSG)
 		printk("read status after init command = %x\n", inb(wbts_io + EC_STR_IDR_OFFSET));
+		printk("wbts device driver open!!\n");
 	#endif
-
-	printk("wbts device driver open!!\n");
 
 	spin_unlock_irqrestore(&wbts_lock, flags);
 
@@ -525,7 +558,57 @@ static void wbts_close(struct input_dev *dev)
 }
 
 //----------------------------------------------------------------------------------------------------------------
-static int __init wbts_init(void)
+static int wbts_suspend(struct device *dev, pm_message_t state)
+{
+	#if (DEBUG_MSG)
+		printk("wbts_suspend!!!\n");
+	#endif
+	
+	bSuspend = TRUE;
+	
+	return	0;
+}
+
+//----------------------------------------------------------------------------------------------------------------
+static int wbts_resume(struct device *dev)
+{
+	unsigned long flags;
+
+	spin_lock_irqsave(&wbts_lock, flags);
+
+	#if	(DEBUG_MSG)
+		printk("read status before init command = %x\n", inb(wbts_io + EC_STR_IDR_OFFSET));
+	#endif
+
+	outb(TS_INIT_CMD, wbts_io + EC_STR_IDR_OFFSET);
+
+	read_iicr = read_ec_iicr();
+
+	#if	(DEBUG_MSG)
+		printk("read status after init command = %x\n", inb(wbts_io + EC_STR_IDR_OFFSET));
+	#endif
+
+	#if (DEBUG_MSG)
+		printk("wbts_resume!!!\n");
+	#endif
+
+	bSuspend = FALSE;
+	
+	init_timer(&ts_timer);
+
+	ts_timer.data 		= (unsigned long)&ts_timer;
+	ts_timer.function 	= wbts_interrupt;
+	ts_timer.expires	= get_jiffies_64() + (SAMPLE_PERIOD * DEFAULT_PERIOD);
+	
+	add_timer(&ts_timer);
+
+	spin_unlock_irqrestore(&wbts_lock, flags);
+
+	return	0;
+}
+
+//----------------------------------------------------------------------------------------------------------------
+static int __devinit wbts_probe(struct device *pdev)
 {
 	int err;
 
@@ -580,7 +663,7 @@ static int __init wbts_init(void)
 	}
 
 	printk("wbts device driver install sucess!(kernel timer based)\n");
-	printk("wbts.ko device driver version 1.0.1 - 2008.02.28\n");
+	printk("wbts.ko device driver version 1.0.2 - 2008.03.31\n");
 
 	return 0;
 
@@ -594,7 +677,7 @@ static int __init wbts_init(void)
 }
 
 //----------------------------------------------------------------------------------------------------------------
-static void __exit wbts_exit(void)
+static int __devexit wbts_remove(struct device *pdev)
 {
 	input_unregister_device(wbts);
 
@@ -608,8 +691,51 @@ static void __exit wbts_exit(void)
 	remove_proc_entry(WBTS_PROC_ROOT_NAME, 			0);
 
 	printk("wbts device driver remove sucess!(kernel timer based)\n");
-
+	
+	return	0;
 }
 
 //----------------------------------------------------------------------------------------------------------------
+static void wbts_release_device(struct device *dev)
+{
+	#if (DEBUG_MSG)
+		printk("wbts_release_device!!\n");
+	#endif
+}
+
+//----------------------------------------------------------------------------------------------------------------
+static int __init wbts_init(void)
+{
+	int ret = driver_register(&wbts_device_driver);
+
+	#if (DEBUG_MSG)
+		printk("driver_register %d \n", ret);
+	#endif
+
+	if(!ret)	{
+		ret = platform_device_register(&wbts_platform_device_driver);
+
+		#if (DEBUG_MSG)
+			printk("platform_driver_register %d \n", ret);
+		#endif
+
+		if(ret)		driver_unregister(&wbts_device_driver);
+	}
+	return ret;
+}
+
+//----------------------------------------------------------------------------------------------------------------
+static void __exit wbts_exit(void)
+{
+	#if	(DEBUG_MSG)
+		printk("wbts_exit \n");
+	#endif
+
+	platform_device_unregister(&wbts_platform_device_driver);
+
+	driver_unregister(&wbts_device_driver);
+}
+
+//----------------------------------------------------------------------------------------------------------------
+
 
