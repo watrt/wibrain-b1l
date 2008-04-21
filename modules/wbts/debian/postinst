@@ -18,7 +18,7 @@ then
 	then
 		ed ${XORG} << EOF
 /touchscreen
--
+?Section
 .,/EndSection/d
 w
 q
@@ -50,7 +50,7 @@ Section "InputDevice"
 	Option		"SendCoreEvents"	"true"
 	Option		"Emulate3Buttons"
 	Option		"Emulate3Timeout"	"50"
-	Option		"LongTouchTimer"	"200"
+	Option		"LongTouchTimer"	"10"
 	Option		"MinX"			"40"
 	Option		"MinY"			"90"
 	Option		"MaxX"			"990"

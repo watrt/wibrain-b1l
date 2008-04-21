@@ -1,3 +1,17 @@
+wbts (1.0-2) unstable; urgency=low
+
+  * Change Interrupt source (timer base to interrupt base).
+
+  * Touch Interrupt check logic change (Hi-speed input error fix).
+
+ -- charles park <charles.jkpark@hotmail.com>  Wed,  16 Apr 2008 14:28:30 +0200
+
+wbts (1.0-1) unstable; urgency=low
+
+  * Hibernation problem fixed.
+
+ -- charles park <charles.jkpark@hotmail.com>  Mon,  31 Mar 2008 14:28:30 +0200
+
 wbts (1.0-0) unstable; urgency=low
 
   * Added evtouch_drv.o (Touchscreen driver for X window)
