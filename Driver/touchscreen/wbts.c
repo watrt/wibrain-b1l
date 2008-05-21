@@ -5,6 +5,7 @@
 //  Copyright (c) 2007-2008 Wibrain Corporation (charles.park@wibrain.com)
 // 
 //----------------------------------------------------------------------------------------------------------------
+#include <linux/version.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/kernel.h>
@@ -604,7 +605,11 @@ static	void 		wbts_ec_check_interrupt(unsigned long arg)
 //----------------------------------------------------------------------------------------------------------------
 static void set_interrupt_mode(unsigned char trigger, unsigned char polarity)
 {
-	struct	io_apic	__iomem *io_apic = (struct	io_apic	__iomem *)0xFFFFC000;
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+	struct	io_apic	__iomem *io_apic = (struct	io_apic	__iomem *)0xFFFFC000;	// Gusty
+#else
+	struct	io_apic	__iomem *io_apic = (struct	io_apic	__iomem *)0xFFFFA000;	// Hardy
+#endif
 	union	entry_union			eu;
 	struct	IO_APIC_route_entry	entry;
 	
@@ -744,9 +749,15 @@ static int __devinit wbts_probe(struct device *pdev)
 	wbts->open	= wbts_open;
 	wbts->close	= wbts_close;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
 	wbts->evbit[0] 	= BIT(EV_KEY) | BIT(EV_ABS);
 	wbts->absbit[0] = BIT(ABS_X)  | BIT(ABS_Y);	
 	wbts->keybit[LONG(BTN_TOUCH)] = BIT(BTN_TOUCH);
+#else
+	wbts->evbit[0] 	= BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+	wbts->absbit[0] = BIT_MASK(ABS_X)  | BIT_MASK(ABS_Y);	
+	wbts->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
+#endif
 
 	input_set_abs_params(wbts, ABS_X, TS_ABS_MIN_X, TS_ABS_MAX_X, 0, 0);
 	input_set_abs_params(wbts, ABS_Y, TS_ABS_MIN_Y, TS_ABS_MAX_Y, 0, 0);
@@ -771,8 +782,11 @@ static int __devinit wbts_probe(struct device *pdev)
 	}
 
 	printk("wbts device driver install sucess!(kernel interrupt based)\n");
-	printk("wbts.ko device driver version 1.0.2 - 2008.04.20\n");
-
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+	printk("wbts.ko device driver version 1.0.2 - 2008.04.20 (Kernel version  < 2.6.24)\n");
+#else
+	printk("wbts.ko device driver version 1.0.2 - 2008.05.14 (Kernel version >= 2.6.24)\n");
+#endif
 	return 0;
 
 	fail2:
