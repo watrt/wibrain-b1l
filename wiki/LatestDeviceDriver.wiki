@@ -1,4 +1,4 @@
-#summary 최종 Release 되어진 Ubuntu 7.10(Gusty) 드라이버.
+#summary 2008년 6월 현재 Release 되어진 Ubuntu 7.10(Gusty) 드라이버.
 #labels Featured
 
 = 2008년 6월 현재 최종 드라이버 목록 및 기존 버전에서 개선되어진 내용 =
