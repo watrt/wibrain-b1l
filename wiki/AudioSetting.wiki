@@ -9,6 +9,7 @@
 {{{
 1. EDIT메뉴의 Preferences항목을 선택합니다.
 2. Display Tab내용 안에 Visual Effects항목중 Type of visualistation 항목을 Monoscope로 변경합니다.
+3. Totem player를 재시작합니다.
 }}}
 
 * Rhythmbox 환경설정
