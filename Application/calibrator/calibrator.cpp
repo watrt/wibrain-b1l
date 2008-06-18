@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Kevron Rees                                     *
- *   tripzero@nextabyte.com                                                         *
+ *   tripzero@nextabyte.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,6 +39,10 @@
 #include <fstream>
 #include <iostream>
 
+#if defined(__USE_CAIRO__)
+#include <cairo.h>
+#include <cairo-xlib.h>
+#endif
 ///added
 using namespace std;
 
@@ -71,7 +75,8 @@ struct input_event {
 /* some constants */
 #define FONT_NAME		"9x15"
 #define IDLETIMEOUT		15
-#define BLINKPERD		0.16        
+#define BLINKPERD		0.16
+#define MININUM_TIME	0.96
 
 #define ROUND_SYMBOL
 #define NumRect			5
@@ -152,8 +157,19 @@ XFontStruct *font_info;
 unsigned int width, height;	/* window size */
 char *progname;
 
+double idle_time = 0;
+double tick = 0;
+
+#if defined(__TEXT_OUT_XORG__)
 void editxorgconf(int, int, int, int, int, int);
+#endif
 /*****************************************************************************/
+
+void Pause(Display *d, int secs)
+{
+	XFlush(d);
+	sleep(secs);
+}
 
 int get_events(int *px, int *py)
 {
@@ -195,9 +211,16 @@ int get_events(int *px, int *py)
 			   	y += (ev[25] - 0x30);
 		   	}
 		}
+		
+		if((x != -1) && (y != -1) && (ev[7] == 0x30)) {
+			if(idle_time > MININUM_TIME) {
+				sync = 1;
+			} else {
+				x = -1;
+				y = -1;
+			}
+		}
 			
-		if((x != -1) && (y != -1) && (ev[7] == 0x30))
-		   	sync = 1;
 #else
 		switch (ev.type) {
 		case EV_ABS:
@@ -272,7 +295,6 @@ void cleanup_exit()
 	exit(0);
 }
 
-
 void load_font(XFontStruct **font_info)
 {
 	char *fontname = FONT_NAME;
@@ -283,7 +305,6 @@ void load_font(XFontStruct **font_info)
 	}
 }
 
-
 void draw_point(int x, int y, int width, int size, unsigned long color)
 {
 	XSetForeground(display, gc, color);
@@ -292,7 +313,6 @@ void draw_point(int x, int y, int width, int size, unsigned long color)
 	XDrawLine(display, win, gc, x - size, y, x + size, y);
 	XDrawLine(display, win, gc, x, y - size, x, y + size);
 }
-
 
 void point_blink(unsigned long color)
 {
@@ -330,6 +350,30 @@ void point_blink(unsigned long color)
 	}
 }
 
+#if defined(__USE_CAIRO__)
+void paint_cairo(cairo_surface_t * cs, int x, int y, char * str)
+{
+	cairo_t *c;
+
+	c = cairo_create(cs);
+
+	//- cairo_rectangle(c, 0.0, 0.0, 0, 0);
+	//- cairo_set_source_rgb(c, 0.0, 0.0, 0.5);
+	//- cairo_fill(c);
+	
+	cairo_set_font_size(c, 19);
+
+	cairo_move_to(c, x, y);
+	cairo_set_source_rgb(c, 0x00, 0x00, 0x00);
+	cairo_show_text(c, str);
+
+	cairo_show_page(c);
+
+	cairo_destroy(c);
+	
+	//- Pause(display, 1);
+}
+#endif
 
 void draw_message(char *msg)
 {
@@ -357,32 +401,53 @@ void draw_message(char *msg)
 	p_height = font_info->ascent + font_info->descent;
 	init = 1;
 
+#if !defined(__USE_CAIRO__)
 	line_height = p_height + 5;
 	x = (width - p_maxwidth) / 2;
 	y = height / 2 - line_height;
+#else
+	line_height = p_height + 20;
+	x = ((width - p_maxwidth) / 2) - 10;
+	y = (height / 2 - line_height) + 30;
+#endif
 
 	XSetForeground(display, gc, PromptText);
 	XSetLineAttributes(display, gc, 3, LineSolid, CapRound, JoinRound);
-	XClearArea(display, win, x - 8, y - 8 - p_height, p_maxwidth + 8 * 2,
-	           num * line_height + 8 * 2, False);
-	XDrawRectangle(display, win, gc, x - 8, y - 8 - p_height,
-	               p_maxwidth + 8 * 2, num * line_height + 8 * 2);
+	XClearArea(display, win, x - 8, y - 8 - p_height, p_maxwidth + 8 * 2, num * line_height + 8 * 2, False);
 
-	for (i = 0; i < num; i++) {
-		XDrawString(display, win, gc, x, y + i * line_height, prompt[i],
-			    p_len[i]);
-	}
+#if !defined(__USE_CAIRO__)
+	XDrawRectangle(display, win, gc, x - 8, y - 8 - p_height, p_maxwidth + 8 * 2, num * line_height + 8 * 2);
+	for (i = 0; i < num; i++)
+		XDrawString(display, win, gc, x, y + i * line_height, prompt[i], p_len[i]);
+#else
+	cairo_surface_t *cs;
+	cs = cairo_xlib_surface_create(display, win, DefaultVisual(display, 0), 0, 0);
+
+	for (i = 0; i < num; i++)
+		paint_cairo(cs, x - 10, y + i * line_height, prompt[i]);
+	
+	
+	cairo_surface_destroy(cs);
+#endif
+
 #undef num
 }
 
-
 void draw_text()
 {
+#if !defined(__USE_CAIRO__)
 	static char *prompt[] = {
 		"                    4-Pt Calibration",
 		"Please touch the blinking symbol until beep or stop blinking",
 		"                     (ESC to Abort)",
 	};
+#else
+	static char *prompt[] = {
+		"                                   4-Pt Calibration",
+		"Please touch the blinking symbol until beep or stop blinking",
+		"                                   (ESC to Abort)",
+	};
+#endif
 #define num	(sizeof(prompt) / sizeof(prompt[0]))
 	static int init = 0;
 	static int p_len[num];
@@ -402,22 +467,35 @@ void draw_text()
 		p_height = font_info->ascent + font_info->descent;
 		init = 1;
 	}
+
+#if !defined(__USE_CAIRO__)
 	line_height = p_height + 5;
 	x = (width - p_maxwidth) / 2;
 	y = height / 2 - 6 * line_height;
+#else
+	line_height = p_height + 20;
+	x = ((width - p_maxwidth) / 2) - 10;
+	y = (height / 2 - 6 * line_height) + 50;
+#endif
 
 	XSetForeground(display, gc, PromptText);
-	XClearArea(display, win, x - 11, y - 8 - p_height,
-		   p_maxwidth + 11 * 2, num * line_height + 8 * 2, False);
-	XSetLineAttributes(display, gc, 3, FillSolid,
-			   CapRound, JoinRound);
-	XDrawRectangle(display, win, gc, x - 11, y - 8 - p_height,
-		       p_maxwidth + 11 * 2, num * line_height + 8 * 2);
+	XClearArea(display, win, x - 11, y - 8 - p_height, p_maxwidth + 11 * 2, num * line_height + 8 * 2, False);
+	XSetLineAttributes(display, gc, 3, FillSolid, CapRound, JoinRound);
 
-	for (i = 0; i < num; i++) {
-		XDrawString(display, win, gc, x, y + i * line_height, prompt[i],
-			    p_len[i]);
-	}
+#if !defined(__USE_CAIRO__)
+	XDrawRectangle(display, win, gc, x - 11, y - 8 - p_height, p_maxwidth + 11 * 2, num * line_height + 8 * 2);
+	for (i = 0; i < num; i++)
+		XDrawString(display, win, gc, x, y + i * line_height, prompt[i], p_len[i]);
+#else
+	cairo_surface_t *cs;
+	cs = cairo_xlib_surface_create(display, win, DefaultVisual(display, 0), 0, 0);
+
+	for (i = 0; i < num; i++)
+		paint_cairo(cs, x, y + i * line_height, prompt[i]);
+
+	cairo_surface_destroy(cs);
+#endif
+
 #undef num
 }
 
@@ -502,7 +580,6 @@ Cursor create_empty_cursor()
 	return mycursor;
 }
 
-
 void process_event()
 {
 	XEvent event;
@@ -531,9 +608,6 @@ void process_event()
 	}
 }
 
-double idle_time = 0;
-double tick = 0;
-
 void set_timer(double interval /* in second */ )
 {
 	struct itimerval timer;
@@ -547,7 +621,6 @@ void set_timer(double interval /* in second */ )
 	tick = interval;
 }
 
-
 void update_timer(void)
 {
 	int current = (int)(width * idle_time / IDLETIMEOUT);
@@ -559,7 +632,6 @@ void update_timer(void)
 	XDrawLine(display, win, gc, current, height - 1, width, height - 1);
 }
 
-
 int register_fasync(int fd, void (*handle) (int))
 {
 	signal(SIGIO, handle);
@@ -567,7 +639,6 @@ int register_fasync(int fd, void (*handle) (int))
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | FASYNC);
 	return 0;
 }
-
 
 void sig_handler(int num)
 {
@@ -599,13 +670,14 @@ void sig_handler(int num)
 
 		if(rval == -1)
 			break;
-		
-		idle_time = 0;
 
 		points_x[points_touched] = x;
 		points_y[points_touched] = y;
 		
 		points_touched++;
+		
+		idle_time = 0;
+
 		draw_graphics();
 
 		break;
@@ -685,15 +757,21 @@ void sig_handler(int num)
 		//- printf("	Option \"MinY\" \"%d\"\n", y_inv ? y_max : y_min);
 		//- printf("	Option \"MaxX\" \"%d\"\n", x_inv ? x_min : x_max);
 		//- printf("	Option \"MaxY\" \"%d\"\n", y_inv ? y_min : y_max);
-		
+
+#if !defined(__USE_CAIRO__)
 		draw_message("   Done...   ");
+#else		
+		draw_message("      Done...");
+#endif
 		XFlush(display);
 
 		sprintf(buf, "/usr/local/bin/xorgApd.sh %d %d %d %d", x_min, y_min, x_max, y_max);
 		system(buf);
 	
-		//- if(doedit) editxorgconf(x_inv ? x_max : x_min, x_inv ? x_min : x_max,
-		//- 			y_inv ? y_min : y_max, y_inv ? y_max : y_min, y_inv, rotate);
+#if defined(__TEXT_OUT_XORG__)
+		if(doedit) editxorgconf(x_inv ? x_max : x_min, x_inv ? x_min : x_max,
+					y_inv ? y_min : y_max, y_inv ? y_max : y_min, y_inv, rotate);
+#endif
 
 		job_done = 1;
 		idle_time = IDLETIMEOUT * 3 / 4;
@@ -708,7 +786,7 @@ void sig_handler(int num)
 //////////////////////////////////////////////////////////////////////////////
 //           MY EDITS
 //////////////////////////////////////////////////////////////////////////////
-#if 0
+#if defined(__TEXT_OUT_XORG__)
 void editxorgconf(int x_min, int x_max, int y_min, int y_max,int y_inv,int rotate)
 {
 	cout<<x_min<<" "<<x_max<<" "<<y_min<<" "<<y_max<<" inverted y: "<<y_inv<<endl;
@@ -868,15 +946,19 @@ int main(int argc, char *argv[], char *env[])
 		cin>>height;
 	}*/
 
-	win = XCreateWindow(display, RootWindow(display, screen),
+	win = XCreateWindow(display, root,
 	                    0, 0, width, height, 0,
 	                    CopyFromParent, InputOutput, CopyFromParent,
 	                    CWOverrideRedirect | CWBackPixel | CWEventMask |
 	                    CWCursor, &xswa);
+
 	XMapWindow(display, win);
-	XGrabKeyboard(display, win, False, GrabModeAsync, GrabModeAsync,
-	              CurrentTime);
+	XFlush(display);
+	XGrabKeyboard(display, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 	XGrabServer(display);
+
+	sleep(1); //- that's why compiz-real process is running, namely to run calibrator anywhere mode in Wisual Effects
+
 	load_font(&font_info);
 	get_gc(win, &gc, font_info);
 	get_color();
@@ -887,10 +969,11 @@ int main(int argc, char *argv[], char *env[])
 	signal(SIGALRM, sig_handler);
 	set_timer(BLINKPERD);
 	//- register_fasync(evfd, sig_handler);
+	//
 
 	/* wait for signals */
 	while (1)
 	   	pause();
-
+	
 	return 0;
 }
