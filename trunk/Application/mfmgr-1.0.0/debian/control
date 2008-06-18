@@ -2,7 +2,7 @@ Source: mfmgr
 Section: gnome
 Priority: optional
 Maintainer: wibrain linux Team <neal.kim@wibrain.com>
-Standards-Version: 1.0.0
+Standards-Version: 1.1.0
 
 Package: mfmgr
 Architecture: any
