@@ -39,6 +39,33 @@ w
 q
 EOF
 		fi
+		
+		OPTION2OK=`grep Option ${XORG} | grep -c MaxSpeed`
+
+		if [ ${OPTION2OK} -ge 1 ]
+		then
+			ed ${XORG} << EOF
+/MaxSpeed
+d
+i
+	Option		"MaxSpeed"		"0.04"
+.
+w
+q
+EOF
+		else
+			ed ${XORG} << EOF
+/Driver.*"synaptics"
+/EndSection
+-
+a
+	Option		"MaxSpeed"		"0.04"
+.
+w
+q
+EOF
+		fi
+
 	else
 		ed ${XORG} << EOF
 /EndSection
@@ -51,6 +78,7 @@ Section "InputDevice"
 	Option		"Device"		"/dev/psaux"
 	Option		"Protocol"		"auto-dev"
 	Option		"HorizEdgeScroll"	"0"
+	Option		"MaxSpeed"			"0.04"
 	Option		"SHMConfig"			"on"
 EndSection
 

@@ -21,6 +21,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <unistd.h>
 
 #include "callbacks.h"
 #include "interface.h"
@@ -330,7 +331,7 @@ on_btn_Calibrate_released              (GtkButton       *button,
 {
 	int retSystem = 0;
 
-	retSystem = system("/usr/local/bin/calibrator /dev/input/touchscreen"); 
+	if(access("/usr/local/bin/calibrator", F_OK) == 0)
+	   	retSystem = system("/usr/local/bin/calibrator"); 
 }
-
 
