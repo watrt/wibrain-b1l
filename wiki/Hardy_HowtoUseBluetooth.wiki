@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Hardy(ubuntu 8.04) 에서 Bluetooth 사용하기
 #labels Featured,Phase-Deploy
 
 = Hardy(ubuntu 8.04) 에서 Bluetooth 사용하기 =
