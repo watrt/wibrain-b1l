@@ -3,9 +3,9 @@ B1 Ubuntu 사용자 중 LiveUSB가 아닌 LiveCD를 가지고 있는 사용자(�
 
 1) 준비물 :
 
-- 깨끗하게 포맷한 USB 메모리(FAT/FAT32 중 택1)
-- Downloads 자료실의 Biosup.img
-- Ubuntu 7.10 or 8.04
+☞ 깨끗하게 포맷한 USB 메모리(FAT/FAT32 중 택1)
+☞ Downloads 자료실의 Biosup.img
+☞ Ubuntu 7.10 or 8.04
 
 2) 부팅 USB 만들기 :
 
@@ -25,7 +25,6 @@ sudo fdisk -l
 sudo dd if=biosup.img of=/dev/sda1
 
 ⑥ 복사가 끝나면 바탕 화면에 있는 USB 메모리를 선택한 후, 마우스 우측 버튼 메뉴의 Unmount를 선택합니다.
-
 ⑦ 이제 B1을 재시작합니다.
 
 ※ 512MB 이상의 고용량 USB 메모리(1, 2, 4GB 혹은 그 이상)를 사용할 경우에는 3-1, 아닐 경우에는 3-2의 내용을 참고하여 진행해 주시기 바랍니다.
