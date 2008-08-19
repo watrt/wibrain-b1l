@@ -7,14 +7,14 @@ B1 Ubuntu 사용자 중 LiveUSB가 아닌 LiveCD를 가지고 있는 사용자(�
 
 1) 준비물 :
 {{{
- ☞ 깨끗하게 포맷한 USB 메모리(FAT/FAT32 중 택1)
+☞ 깨끗하게 포맷한 USB 메모리(FAT/FAT32 중 택1)
 ☞ Downloads 자료실의 Biosup.img
 ☞ Ubuntu 7.10 or 8.04
 }}}
 
 2) 부팅 USB 만들기 :
 {{{
- ① B1의 전원을 켠 후, Ubuntu Linux로 부팅합니다.
+① B1의 전원을 켠 후, Ubuntu Linux로 부팅합니다.
 ② 빈 USB 메모리를 B1 USB 단자에 꽂습니다.
 ③ 응용 프로그램 - 터미널을 실행합니다.
 ④ 아래 명령으로 USB 메모리의 장치 정보를 확인합니다.
@@ -34,7 +34,7 @@ sudo dd if=biosup.img of=/dev/sda1
 
 3-1) BIOS 설정 변경 - 512MB 이상의 고용량 USB 메모리 사용
 {{{
- ① Wibrain 로고 화면에서 DEL 키를 눌러 BIOS로 진입합니다.
+① Wibrain 로고 화면에서 DEL 키를 눌러 BIOS로 진입합니다.
 ② 우측 화살표키를 눌러 Advanced 탭으로 이동합니다.
 ③ 아래 화살표키를 눌러 USB Configuration 항목으로 이동한 후, Enter 키를 누릅니다.
 ④ 아래 화살표키를 눌러 USB Mass Storage Device Configuration 항목으로 이동한 후, Enter 키를 누릅니다.
@@ -46,14 +46,14 @@ sudo dd if=biosup.img of=/dev/sda1
 
 3-2) 부팅 장치 선택 - 512MB 이하의 저용량 USB 메모리 사용
 {{{
- ① Wibrain 로고 화면에서 F11키를 누릅니다.
+① Wibrain 로고 화면에서 F11키를 누릅니다.
 ② Boot Device 중에 USB 메모리 항목을 선택한 후, Enter 키를 누릅니다.
 }}}
 
 4) USB 부팅 메뉴
 정상적으로 부팅되면 아래와 같이 선택 메뉴가 나타납니다.
 {{{
- *************************************
+*************************************
 * BIOS & EC Update for Ubuntu users *
 *************************************
 
