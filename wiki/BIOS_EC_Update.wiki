@@ -1,3 +1,4 @@
+#summary 부팅 가능한 USB 메모리를 통해 BIOS/EC를 업그레이드 하는 방법
 #labels Featured
 B1 Ubuntu 사용자 중 LiveUSB가 아닌 LiveCD를 가지고 있는 사용자(혹은 LiveUSB가 깨진 경우)는 별도로 가지고 있는 부팅 가능한 USB 메모리를 통해 BIOS/EC 업데이트를 받을 수 있습니다.
 
