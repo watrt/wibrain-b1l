@@ -1,0 +1,78 @@
+#summary How to update BIOS/EC by a bootable USB stick
+#labels Featured
+= How to make a bootable USB stick for updating BIOS/EC in Ubuntu/Linux =
+* We did't give a USB stick. You can buy many kinds of bootable USB sticks in E-markets. *
+
+Most of B1L/B1S users can update BIOS/EC by a bootable USB stick. Please read this document as follows. 
+
+1. Requirements :
+{{{
+- a USB stick (that was already formatted to FAT/FAT32)
+- Biosup.img from Downloads
+- Ubuntu 7.10 or 8.04
+}}}
+
+2) make a bootable USB :
+{{{
+1) Turn on the B1, and start the Ubuntu Linux.
+2) Connect the USB stick in USB port.
+3) Click 'Applications - Accessories - Terminal'
+4) Check the device name about the USB stick. (ex) /dev/sda1
+
+sudo fdisk -l
+
+5) Copy the Biosup.img in 'HOME folder' and run this command.
+
+sudo dd if=biosup.img of=/dev/sda1
+
+6) After finished, restart the B1.
+
+* If you have the USB stick over 512MB, go to the 3-1 section. If not, go to the 3-2 section.
+}}}
+
+3-1) Change the BIOS setup for the USB stick over 512MB
+{{{
+1) Press DEL key before disappearing the Wibrain start logo.
+2) Go to 'Advanced' menu.
+3) Go to 'USB Configuration' section, then press [Enter] key.
+4) Go to 'USB Mass Storage Device Configuration' section, then press [Enter] key.
+⑤ Change 'Emulation Type' to "Force FDD".
+⑥ After finished, save settings and exit(F10). 
+
+* After updated the BIOS/EC, please change 'Emulation Type' to "Auto".
+}}}
+
+3-2) Choose the bootable device for the USB stick under 512MB
+{{{
+1) Press F11 key before disappering the Wibrain start logo.
+2) Choose the USB device from the device list, then press [Enter] key.
+}}}
+
+4) Boot menu in the USB stick
+{{{
+*************************************
+* BIOS & EC Update for Ubuntu users *
+*************************************
+
+WARNING! This will update BIOS and EC for all B1 products!
+Please connect D.C Power and battery when updating batch job.
+
+BIOS changes to 1105
+EC   changes to 4048
+
+1. Update BIOS and EC now!
+2. Read the revision history about BIOS and EC
+3. Exit to DOS
+Choose the number[1.2.3]?_
+}}}
+You may select the number 1, 2, 3. Check this working table and press the number.
+{{{
+1 : Update the BIOS/EC immediately. After updated, B1 will be turned off automatically. After done, turn on the B1 and go on a BIOS. You may find the BIOS and EC version.
+2 : Read the revision history about B1. After read, press any key. You may select the Boot menu once again. 
+3 : Exit to DOS. 
+}}}
+
+5) re-formatting the USB stick
+{{{
+After done, please re-format the USB stick. So you can use all disk space in the USB stick.
+}}}
