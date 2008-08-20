@@ -1,23 +1,23 @@
 #summary How to update BIOS/EC by a bootable USB stick
 #labels Featured
-= How to make a bootable USB stick for updating BIOS/EC in Ubuntu/Linux =
-* We did't give a USB stick. You can buy many kinds of bootable USB sticks in E-markets. *
+= How to make a bootable USB stick for updating BIOS/EC via Ubuntu/Linux =
+* There's no USB stick for booting in the gift box. If you'd like to use it pls purchase one and follow the indication as below. *
 
-Most of B1L/B1S users can update BIOS/EC by a bootable USB stick. Please read this document as follows. 
+Most of Wibrain B1 series users can update BIOS/EC by a bootable USB stick. Please read this document as follows. 
 
 1. Requirements :
 {{{
-- a USB stick (that was already formatted to FAT/FAT32)
+- USB memory stick that has been already formatted to FAT or FAT32 filesystem.
 - Biosup.img from Downloads
 - Ubuntu 7.10 or 8.04
 }}}
 
-2) make a bootable USB :
+2. How to make a bootable USB memory stick :
 {{{
-1) Turn on the B1, and start the Ubuntu Linux.
-2) Connect the USB stick in USB port.
-3) Click 'Applications - Accessories - Terminal'
-4) Check the device name about the USB stick. (ex) /dev/sda1
+1) Turn the power on.
+2) Connect the USB stick to your product.
+3) Go to 'Applications - Accessories - Terminal'
+4) Check the device name of the USB memory stick. (ex) /dev/sda1
 
 sudo fdisk -l
 
@@ -25,30 +25,32 @@ sudo fdisk -l
 
 sudo dd if=biosup.img of=/dev/sda1
 
-6) After finished, restart the B1.
-
-* If you have the USB stick over 512MB, go to the 3-1 section. If not, go to the 3-2 section.
+6) If you finished above installation, restart your product.
+}}}
+{{{
+* If the storage of your USB memory stick is more than 512MB, go to "3-1". If not, go to "3-2".
 }}}
 
-3-1) Change the BIOS setup for the USB stick over 512MB
+3-1. Change the BIOS setup for the USB memory stick over 512MB
 {{{
-1) Press DEL key before disappearing the Wibrain start logo.
+1) Press DEL key when the Wibrain start-up image shows up.
 2) Go to 'Advanced' menu.
-3) Go to 'USB Configuration' section, then press [Enter] key.
-4) Go to 'USB Mass Storage Device Configuration' section, then press [Enter] key.
+3) Go to 'USB Configuration' section, and press [Enter].
+4) Go to 'USB Mass Storage Device Configuration', and press [Enter] key.
 5) Change 'Emulation Type' to "Force FDD".
-6) After finished, save settings and exit(F10). 
-
-* After updated the BIOS/EC, please change 'Emulation Type' to "Auto".
+6) If you finished above setting, save settings and exit(F10). 
 }}}
-
-3-2) Choose the bootable device for the USB stick under 512MB
 {{{
-1) Press F11 key before disappering the Wibrain start logo.
-2) Choose the USB device from the device list, then press [Enter] key.
+* After the BIOS/EC has been updated, pls change 'Emulation Type' to "Auto".
 }}}
 
-4) Boot menu in the USB stick
+3-2. Choose the bootable device for the USB memory stick less than 512MB
+{{{
+1) Press "F11" when the Wibrain start-up logo shows up.
+2) Choose the USB memory stick model from the device list, and press [Enter].
+}}}
+
+4. [USB booting menu] If you have installed properly, you will see as below text on the display.
 {{{
 *************************************
 * BIOS & EC Update for Ubuntu users *
@@ -65,14 +67,21 @@ EC   changes to 4048
 3. Exit to DOS
 Choose the number[1.2.3]?_
 }}}
-You may select the number 1, 2, 3. Check this working table and press the number.
+As per your choive among No. 1~3, your product will be working as below.
 {{{
-1 : Update the BIOS/EC immediately. After updated, B1 will be turned off automatically. After done, turn on the B1 and go on a BIOS. You may find the BIOS and EC version.
-2 : Read the revision history about B1. After read, press any key. You may select the Boot menu once again. 
-3 : Exit to DOS. 
+If you select No. 1 :
+Update the BIOS/EC immediately. After updated, B1 will be turned off automatically. After done, turn on the B1 and go on a BIOS. You may find the BIOS and EC version.
+}}}
+{{{
+If you select No. 2 :
+Read the revision history about B1. After read, press any key. You may select the Boot menu once again. 
+}}}
+{{{
+If you select No. 3 :
+Exit to DOS. 
 }}}
 
-5) re-formatting the USB stick
+5. Re-formatting the USB memory stick
 {{{
-After done, please re-format the USB stick. So you can use all disk space in the USB stick.
+After you've done all indication, pls re-format the USB stick. 
 }}}
