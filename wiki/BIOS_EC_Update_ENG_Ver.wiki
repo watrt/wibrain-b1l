@@ -36,8 +36,8 @@ sudo dd if=biosup.img of=/dev/sda1
 2) Go to 'Advanced' menu.
 3) Go to 'USB Configuration' section, then press [Enter] key.
 4) Go to 'USB Mass Storage Device Configuration' section, then press [Enter] key.
-⑤ Change 'Emulation Type' to "Force FDD".
-⑥ After finished, save settings and exit(F10). 
+5) Change 'Emulation Type' to "Force FDD".
+6) After finished, save settings and exit(F10). 
 
 * After updated the BIOS/EC, please change 'Emulation Type' to "Auto".
 }}}
