@@ -51,7 +51,9 @@ sudo dd if=biosup.img of=/dev/sda1
 }}}
 
 4) USB 부팅 메뉴
+{{{
 정상적으로 부팅되면 아래와 같이 선택 메뉴가 나타납니다.
+}}}
 {{{
 *************************************
 * BIOS & EC Update for Ubuntu users *
@@ -76,4 +78,6 @@ Choose the number[1.2.3]?_
 }}}
 
 5) USB 메모리 재포맷
+{{{
 BIOS/EC 업데이트용으로 만든 USB 메모리는 재포맷해야 원래 크기로 돌아옵니다.
+}}}
