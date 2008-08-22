@@ -50,7 +50,10 @@ sudo dd if=biosup.img of=/dev/sda1
 2) Choose the USB memory stick model from the device list, and press [Enter].
 }}}
 
-4. [USB booting menu] If you have installed properly, you will see as below text on the display.
+4. USB booting menu 
+{{{
+If you have installed properly, you will see as below text on the display.
+}}}
 {{{
 *************************************
 * BIOS & EC Update for Ubuntu users *
